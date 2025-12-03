@@ -29,13 +29,40 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> addNewStudent(StudentModel student) async {
     await addStudent(student);
+
+    // تحديث UI فورًا
+    final currentState = state;
+    if (currentState is DashboardLoaded) {
+      final updatedList = List<StudentModel>.from(currentState.students)
+        ..add(student);
+      emit(DashboardLoaded(updatedList));
+    }
   }
 
   Future<void> updateExistingStudent(StudentModel student) async {
     await updateStudent(student);
+
+    // تحديث UI فورًا
+    final currentState = state;
+    if (currentState is DashboardLoaded) {
+      final updatedList =
+          currentState.students.map((s) {
+            if (s.id == student.id) return student;
+            return s;
+          }).toList();
+      emit(DashboardLoaded(updatedList));
+    }
   }
 
   Future<void> removeStudent(String id) async {
     await deleteStudent(id);
+
+    // تحديث فورّي للـ state
+    final currentState = state;
+    if (currentState is DashboardLoaded) {
+      final updatedList =
+          currentState.students.where((student) => student.id != id).toList();
+      emit(DashboardLoaded(updatedList));
+    }
   }
 }

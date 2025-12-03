@@ -1,18 +1,19 @@
 import 'package:captin_care/features/home/presentation/cubits/dashboard_cubit/dashboard_cubit.dart';
 import 'package:captin_care/features/home/presentation/screens/home_page.dart';
-import 'package:captin_care/firebase_options.dart';
 import 'package:captin_care/injection_container.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 1️⃣ initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await Supabase.initialize(
+    url: 'https://bauouochgpbntyhmqhpm.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdW91b2NoZ3BibnR5aG1xaHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3ODUzNDAsImV4cCI6MjA4MDM2MTM0MH0.eqs6vCjTCjbUzMqv6PK_hSvKJFftstAA4oO6EKxqxJM',
   );
 
   // 2️⃣ initialize DI (GetIt)
@@ -42,16 +43,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DashboardCubit(
-        addStudent: sl(),
-        deleteStudent: sl(),
-        getStudents: sl(),
-        updateStudent: sl(),
-      ),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomePage(),
-      ),
+      create:
+          (context) => DashboardCubit(
+            addStudent: sl(),
+            deleteStudent: sl(),
+            getStudents: sl(),
+            updateStudent: sl(),
+          )..fetchStudents(),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
     );
   }
 }

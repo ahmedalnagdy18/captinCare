@@ -45,9 +45,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 DropdownButtonFormField(
                   value: status,
-                  items: ["Active", "Paused"]
-                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                      .toList(),
+                  items:
+                      ["Active", "Paused"]
+                          .map(
+                            (s) => DropdownMenuItem(value: s, child: Text(s)),
+                          )
+                          .toList(),
                   onChanged: (v) => status = v!,
                   decoration: const InputDecoration(labelText: "Status"),
                 ),
@@ -99,9 +102,7 @@ class _HomePageState extends State<HomePage> {
     const textColor = Color(0xFF111827);
 
     return BlocConsumer<DashboardCubit, DashboardState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         List<StudentModel> students = [];
         if (state is DashboardLoaded) {
@@ -264,21 +265,21 @@ class _HomePageState extends State<HomePage> {
                                         SizedBox(width: 6),
                                         s.status == "Paused"
                                             ? Container(
-                                                width: 8,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.red,
-                                                ),
-                                              )
-                                            : Container(
-                                                width: 8,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.green,
-                                                ),
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.red,
                                               ),
+                                            )
+                                            : Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.green,
+                                              ),
+                                            ),
                                       ],
                                     ),
                                   ),
@@ -290,17 +291,18 @@ class _HomePageState extends State<HomePage> {
                                             Icons.edit,
                                             color: Colors.blue,
                                           ),
-                                          onPressed: () =>
-                                              openStudentForm(student: s),
+                                          onPressed:
+                                              () => openStudentForm(student: s),
                                         ),
                                         IconButton(
                                           icon: const Icon(
                                             Icons.delete,
                                             color: Colors.red,
                                           ),
-                                          onPressed: () => context
-                                              .read<DashboardCubit>()
-                                              .removeStudent(s.id!),
+                                          onPressed:
+                                              () => context
+                                                  .read<DashboardCubit>()
+                                                  .removeStudent(s.id!),
                                         ),
                                       ],
                                     ),

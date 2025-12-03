@@ -5,11 +5,20 @@ import 'package:captin_care/features/home/domain/usecases/delete_student_usecase
 import 'package:captin_care/features/home/domain/usecases/get_students_usecase.dart';
 import 'package:captin_care/features/home/domain/usecases/update_student_usecase.dart';
 import 'package:get_it/get_it.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // Usecases
+  // 1. Supabase Client
+  sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+
+  // 2. Repository
+  sl.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepositoryImp(supabase: sl()),
+  );
+
+  // 3. Usecases
   sl.registerLazySingleton<AddStudentUseCase>(
     () => AddStudentUseCase(repository: sl()),
   );
@@ -21,11 +30,5 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<UpdateStudentUseCase>(
     () => UpdateStudentUseCase(repository: sl()),
-  );
-
-  // Repository
-
-  sl.registerLazySingleton<DashboardRepository>(
-    () => DashboardRepositoryImp(firestore: sl()),
   );
 }
