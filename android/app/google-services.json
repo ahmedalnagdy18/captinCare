@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866344199872",
+    "project_id": "captin-care",
+    "storage_bucket": "captin-care.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866344199872:android:97c5565fdc1a206f666f25",
+        "android_client_info": {
+          "package_name": "com.example.captin_care"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9XpmxqqULxQxk2IGGZJ_hJieIIxJWvzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
