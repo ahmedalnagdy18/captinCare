@@ -24,8 +24,15 @@ class DashboardRepositoryImp implements DashboardRepository {
 
   // Add new student
   @override
-  Future<void> addStudent(StudentModel student) async {
-    await supabase.from('students').insert(student.toMap());
+  Future<StudentModel> addStudent(StudentModel student) async {
+    final response =
+        await supabase
+            .from('students')
+            .insert(student.toMap())
+            .select()
+            .single();
+
+    return StudentModel.fromMap(response, response['id'].toString());
   }
 
   // Update existing student

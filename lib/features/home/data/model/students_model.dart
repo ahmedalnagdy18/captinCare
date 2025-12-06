@@ -2,13 +2,17 @@ class StudentModel {
   final String name;
   final String school;
   final String phone;
+  final String paymentMethod;
+  final String amout;
   final String status;
-  final String? id; // Firestore doc ID (optional)
+  final String? id;
 
   StudentModel({
     required this.name,
     required this.school,
     required this.phone,
+    required this.paymentMethod,
+    required this.amout,
     required this.status,
     this.id,
   });
@@ -18,6 +22,8 @@ class StudentModel {
       name: map['name'] ?? '',
       school: map['school'] ?? '',
       phone: map['phone'] ?? '',
+      paymentMethod: map['paymentMethod'] ?? 'InstaPay',
+      amout: map['amout'] ?? '',
       status: map['status'] ?? 'Active',
       id: id,
     );
@@ -28,6 +34,8 @@ class StudentModel {
       'name': name,
       'school': school,
       'phone': phone,
+      'paymentMethod': paymentMethod,
+      'amout': amout,
       'status': status,
     };
   }

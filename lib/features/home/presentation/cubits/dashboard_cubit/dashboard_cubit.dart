@@ -28,14 +28,11 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> addNewStudent(StudentModel student) async {
-    await addStudent(student);
+    final newStudent = await addStudent(student);
 
-    // تحديث UI فورًا
     final currentState = state;
     if (currentState is DashboardLoaded) {
-      final updatedList = List<StudentModel>.from(currentState.students)
-        ..add(student);
-      emit(DashboardLoaded(updatedList));
+      emit(DashboardLoaded([...currentState.students, newStudent]));
     }
   }
 

@@ -6,7 +6,7 @@ class AddStudentUseCase {
 
   AddStudentUseCase({required this.repository});
 
-  Future<void> call(StudentModel student) async {
+  Future<StudentModel> call(StudentModel student) async {
     return repository.addStudent(student);
   }
 }

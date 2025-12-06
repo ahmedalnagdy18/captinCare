@@ -18,7 +18,12 @@ class _HomePageState extends State<HomePage> {
     final nameCtrl = TextEditingController(text: student?.name ?? "");
     final schoolCtrl = TextEditingController(text: student?.school ?? "");
     final phoneCtrl = TextEditingController(text: student?.phone ?? "");
+    // final paymentMethodCtrl = TextEditingController(
+    //   text: student?.paymentMethod ?? "",
+    // );
+    final amoutCtrl = TextEditingController(text: student?.amout ?? "");
     String status = student?.status ?? "Active";
+    String paymentMethod = student?.paymentMethod ?? "InstaPay";
 
     showDialog(
       context: context,
@@ -38,6 +43,29 @@ class _HomePageState extends State<HomePage> {
                 TextField(
                   controller: schoolCtrl,
                   decoration: const InputDecoration(labelText: "School"),
+                ),
+                // TextField(
+                //   controller: paymentMethodCtrl,
+                //   decoration: const InputDecoration(
+                //     labelText: "payment method",
+                //   ),
+                // ),
+                DropdownButtonFormField(
+                  value: paymentMethod,
+                  items:
+                      ["InstaPay", "Vodafone cash"]
+                          .map(
+                            (q) => DropdownMenuItem(value: q, child: Text(q)),
+                          )
+                          .toList(),
+                  onChanged: (x) => paymentMethod = x!,
+                  decoration: const InputDecoration(
+                    labelText: "payment method",
+                  ),
+                ),
+                TextField(
+                  controller: amoutCtrl,
+                  decoration: const InputDecoration(labelText: "Amout"),
                 ),
                 TextField(
                   controller: phoneCtrl,
@@ -71,6 +99,8 @@ class _HomePageState extends State<HomePage> {
                       name: nameCtrl.text,
                       school: schoolCtrl.text,
                       phone: phoneCtrl.text,
+                      paymentMethod: paymentMethod,
+                      amout: amoutCtrl.text,
                       status: status,
                     ),
                   );
@@ -81,6 +111,8 @@ class _HomePageState extends State<HomePage> {
                       name: nameCtrl.text,
                       school: schoolCtrl.text,
                       phone: phoneCtrl.text,
+                      paymentMethod: paymentMethod,
+                      amout: amoutCtrl.text,
                       status: status,
                     ),
                   );
@@ -247,6 +279,8 @@ class _HomePageState extends State<HomePage> {
                               DataColumn(label: Text("Name")),
                               DataColumn(label: Text("School")),
                               DataColumn(label: Text("Parent Phone")),
+                              DataColumn(label: Text("payment Method")),
+                              DataColumn(label: Text("Amout")),
                               DataColumn(label: Text("Status")),
                               DataColumn(label: Text("Actions")),
                             ],
@@ -258,6 +292,8 @@ class _HomePageState extends State<HomePage> {
                                   DataCell(Text(s.name)),
                                   DataCell(Text(s.school)),
                                   DataCell(Text(s.phone)),
+                                  DataCell(Text(s.paymentMethod)),
+                                  DataCell(Text(s.amout)),
                                   DataCell(
                                     Row(
                                       children: [
