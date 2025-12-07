@@ -32,7 +32,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     final currentState = state;
     if (currentState is DashboardLoaded) {
-      emit(DashboardLoaded([...currentState.students, newStudent]));
+      emit(DashboardLoaded([newStudent, ...currentState.students]));
     }
   }
 

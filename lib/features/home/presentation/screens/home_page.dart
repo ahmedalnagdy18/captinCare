@@ -1,7 +1,9 @@
+import 'package:captin_care/core/common/alert_dialog_widget.dart';
 import 'package:captin_care/features/home/data/model/students_model.dart';
 import 'package:captin_care/features/home/presentation/cubits/dashboard_cubit/dashboard_cubit.dart';
 import 'package:captin_care/features/home/presentation/widgets/dashboard_card_widget.dart';
 import 'package:captin_care/features/home/presentation/widgets/slider_widget.dart';
+import 'package:captin_care/features/home/presentation/widgets/student_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,119 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // ------- ADD OR EDIT STUDENT DIALOG -------
-  void openStudentForm({StudentModel? student}) {
-    final nameCtrl = TextEditingController(text: student?.name ?? "");
-    final schoolCtrl = TextEditingController(text: student?.school ?? "");
-    final phoneCtrl = TextEditingController(text: student?.phone ?? "");
-    // final paymentMethodCtrl = TextEditingController(
-    //   text: student?.paymentMethod ?? "",
-    // );
-    final amoutCtrl = TextEditingController(text: student?.amout ?? "");
-    String status = student?.status ?? "Active";
-    String paymentMethod = student?.paymentMethod ?? "InstaPay";
-
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: Text(student == null ? "Add Student" : "Edit Student"),
-          content: SizedBox(
-            width: 400,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameCtrl,
-                  decoration: const InputDecoration(labelText: "Name"),
-                ),
-                TextField(
-                  controller: schoolCtrl,
-                  decoration: const InputDecoration(labelText: "School"),
-                ),
-                // TextField(
-                //   controller: paymentMethodCtrl,
-                //   decoration: const InputDecoration(
-                //     labelText: "payment method",
-                //   ),
-                // ),
-                DropdownButtonFormField(
-                  value: paymentMethod,
-                  items:
-                      ["InstaPay", "Vodafone cash"]
-                          .map(
-                            (q) => DropdownMenuItem(value: q, child: Text(q)),
-                          )
-                          .toList(),
-                  onChanged: (x) => paymentMethod = x!,
-                  decoration: const InputDecoration(
-                    labelText: "payment method",
-                  ),
-                ),
-                TextField(
-                  controller: amoutCtrl,
-                  decoration: const InputDecoration(labelText: "Amout"),
-                ),
-                TextField(
-                  controller: phoneCtrl,
-                  decoration: const InputDecoration(labelText: "Parent Phone"),
-                ),
-                DropdownButtonFormField(
-                  value: status,
-                  items:
-                      ["Active", "Paused"]
-                          .map(
-                            (s) => DropdownMenuItem(value: s, child: Text(s)),
-                          )
-                          .toList(),
-                  onChanged: (v) => status = v!,
-                  decoration: const InputDecoration(labelText: "Status"),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final cubit = context.read<DashboardCubit>();
-                if (student == null) {
-                  cubit.addNewStudent(
-                    StudentModel(
-                      name: nameCtrl.text,
-                      school: schoolCtrl.text,
-                      phone: phoneCtrl.text,
-                      paymentMethod: paymentMethod,
-                      amout: amoutCtrl.text,
-                      status: status,
-                    ),
-                  );
-                } else {
-                  cubit.updateExistingStudent(
-                    StudentModel(
-                      id: student.id,
-                      name: nameCtrl.text,
-                      school: schoolCtrl.text,
-                      phone: phoneCtrl.text,
-                      paymentMethod: paymentMethod,
-                      amout: amoutCtrl.text,
-                      status: status,
-                    ),
-                  );
-                }
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final TextEditingController searchCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +30,15 @@ class _HomePageState extends State<HomePage> {
         if (state is DashboardLoaded) {
           students = state.students;
         }
+
+        final studentsToShow =
+            searchCtrl.text.isEmpty
+                ? students
+                : students.where((s) {
+                  final query = searchCtrl.text.toLowerCase();
+                  return s.name.toLowerCase().contains(query) ||
+                      s.phone.toLowerCase().contains(query);
+                }).toList();
         return Scaffold(
           backgroundColor: bgColor,
           body: Row(
@@ -230,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                                 vertical: 14,
                               ),
                             ),
-                            onPressed: () => openStudentForm(),
+                            onPressed: () => openStudentForm(context),
                             child: const Text(
                               "Add Student",
                               style: TextStyle(color: Colors.white),
@@ -242,113 +141,153 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 15),
 
                       // Search bar
-                      Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Color(0xFFD1D5DB)),
-                        ),
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Search",
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 48,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Color(0xFFD1D5DB)),
+                              ),
+                              child: TextField(
+                                controller: searchCtrl,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Search by name or phone",
+                                ),
+                                onChanged: (_) {
+                                  setState(
+                                    () {},
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            onPressed: () {
+                              context
+                                  .read<DashboardCubit>()
+                                  .fetchStudents(); // refresh data button
+                            },
+                            icon: Icon(Icons.refresh),
+                          ),
+                        ],
                       ),
 
                       const SizedBox(height: 25),
                       // ------------------ STUDENTS TABLE ------------------
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SingleChildScrollView(
-                          scrollDirection:
-                              Axis.horizontal, // مهمة علشان لما العرض يصغر
-                          child: DataTable(
-                            headingRowColor: MaterialStateProperty.all(
-                              Colors.grey.shade200,
+                      state is DashboardLoading
+                          ? Center(child: CircularProgressIndicator.adaptive())
+                          : Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            columnSpacing: 40,
-                            horizontalMargin: 20,
-                            columns: const [
-                              DataColumn(label: Text("#")),
-                              DataColumn(label: Text("Name")),
-                              DataColumn(label: Text("School")),
-                              DataColumn(label: Text("Parent Phone")),
-                              DataColumn(label: Text("payment Method")),
-                              DataColumn(label: Text("Amout")),
-                              DataColumn(label: Text("Status")),
-                              DataColumn(label: Text("Actions")),
-                            ],
-                            rows: List.generate(students.length, (i) {
-                              final s = students[i];
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text("${i + 1}")),
-                                  DataCell(Text(s.name)),
-                                  DataCell(Text(s.school)),
-                                  DataCell(Text(s.phone)),
-                                  DataCell(Text(s.paymentMethod)),
-                                  DataCell(Text(s.amout)),
-                                  DataCell(
-                                    Row(
-                                      children: [
-                                        Text(s.status),
-                                        SizedBox(width: 6),
-                                        s.status == "Paused"
-                                            ? Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                headingRowColor: WidgetStateProperty.all(
+                                  Colors.grey.shade200,
+                                ),
+                                columnSpacing: 40,
+                                horizontalMargin: 20,
+                                columns: const [
+                                  DataColumn(label: Text("#")),
+                                  DataColumn(label: Text("Name")),
+                                  DataColumn(label: Text("School")),
+                                  DataColumn(label: Text("Parent Phone")),
+                                  DataColumn(label: Text("payment Method")),
+                                  DataColumn(label: Text("Amout")),
+                                  DataColumn(label: Text("Status")),
+                                  DataColumn(label: Text("Actions")),
+                                ],
+                                rows: List.generate(studentsToShow.length, (i) {
+                                  final s = studentsToShow[i];
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(Text("${i + 1}")),
+                                      DataCell(Text(s.name)),
+                                      DataCell(Text(s.school)),
+                                      DataCell(Text(s.phone)),
+                                      DataCell(Text(s.paymentMethod)),
+                                      DataCell(Text(s.amout)),
+                                      DataCell(
+                                        Row(
+                                          children: [
+                                            Text(s.status),
+                                            SizedBox(width: 6),
+                                            s.status == "Paused"
+                                                ? Container(
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                                : Container(
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                          ],
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.edit,
+                                                color: Colors.blue,
+                                              ),
+                                              onPressed:
+                                                  () => openStudentForm(
+                                                    context,
+                                                    student: s,
+                                                  ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
                                                 color: Colors.red,
                                               ),
-                                            )
-                                            : Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
+                                              onPressed:
+                                                  () => showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (
+                                                          context,
+                                                        ) => AlertDialogWidget(
+                                                          onDelete:
+                                                              () => context
+                                                                  .read<
+                                                                    DashboardCubit
+                                                                  >()
+                                                                  .removeStudent(
+                                                                    s.id!,
+                                                                  ),
+                                                        ),
+                                                  ),
                                             ),
-                                      ],
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.blue,
-                                          ),
-                                          onPressed:
-                                              () => openStudentForm(student: s),
+                                          ],
                                         ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed:
-                                              () => context
-                                                  .read<DashboardCubit>()
-                                                  .removeStudent(s.id!),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

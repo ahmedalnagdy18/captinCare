@@ -50,7 +50,10 @@ class MyApp extends StatelessWidget {
             getStudents: sl(),
             updateStudent: sl(),
           )..fetchStudents(),
-      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      ),
     );
   }
 }
