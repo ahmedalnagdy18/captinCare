@@ -1,5 +1,10 @@
 import 'package:captin_care/core/colors/app_colors.dart';
+import 'package:captin_care/features/home/data/model/students_model.dart';
+import 'package:captin_care/features/home/presentation/cubits/dashboard_cubit/dashboard_cubit.dart';
+import 'package:captin_care/features/home/presentation/widgets/export_to_excel_widget.dart';
+import 'package:captin_care/features/home/presentation/widgets/student_form_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SliderWidget extends StatelessWidget {
   const SliderWidget({super.key});
@@ -34,10 +39,27 @@ class SliderWidget extends StatelessWidget {
             // Menu Items
             buildMenuItem(icon: Icons.dashboard, title: "Dashboard"),
             buildMenuItem(icon: Icons.people, title: "Students"),
-            buildMenuItem(icon: Icons.add, title: "Add Student"),
-            buildMenuItem(
-              icon: Icons.file_copy,
-              title: "Payment Reports",
+            InkWell(
+              onTap: () {
+                openStudentForm(context);
+              },
+              child: buildMenuItem(icon: Icons.add, title: "Add Student"),
+            ),
+            InkWell(
+              onTap: () {
+                final students =
+                    context.read<DashboardCubit>().state is DashboardLoaded
+                        ? (context.read<DashboardCubit>().state
+                                as DashboardLoaded)
+                            .students
+                            .cast<StudentModel>()
+                        : <StudentModel>[];
+                exportToExcel(context, students);
+              },
+              child: buildMenuItem(
+                icon: Icons.file_copy,
+                title: "Export to Excel",
+              ),
             ),
             buildMenuItem(icon: Icons.settings, title: "Settings"),
 

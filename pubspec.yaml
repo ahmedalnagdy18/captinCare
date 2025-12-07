@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.7.0 <4.0.0'
+  sdk: ">=3.7.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,10 +30,12 @@ environment:
 dependencies:
   bloc: ^9.1.0
   cupertino_icons: ^1.0.8
+  excel: ^2.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   get_it: ^9.1.1
+  path_provider: ^2.1.5
   supabase_flutter: ^2.10.3
   window_manager: ^0.5.1
 
