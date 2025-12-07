@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Search by name or phone",
+                                  hintStyle: TextStyle(color: Colors.grey),
                                 ),
                                 onChanged: (_) {
                                   setState(

@@ -59,8 +59,10 @@ Future<void> exportToExcel(
   if (context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text(
-          'Excel exported successfully! Check your Documents folder.',
+        content: Center(
+          child: Text(
+            'Excel exported successfully! Check your Documents folder.',
+          ),
         ),
       ),
     );
