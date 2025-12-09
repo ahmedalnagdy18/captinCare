@@ -31,6 +31,11 @@ class _HomePageState extends State<HomePage> {
           students = state.students;
         }
 
+        final totalIncome = students.fold<int>(
+          0,
+          (sum, s) => sum + (int.tryParse(s.amout) ?? 0),
+        );
+
         final studentsToShow =
             searchCtrl.text.isEmpty
                 ? students
@@ -85,23 +90,42 @@ class _HomePageState extends State<HomePage> {
                       SingleChildScrollView(
                         physics: AlwaysScrollableScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DashboardCardWidget(
-                              title: "Total Students",
-                              number: "${students.length}",
+                            Row(
+                              children: [
+                                DashboardCardWidget(
+                                  title: "Total Students",
+                                  number: "${students.length}",
+                                ),
+                                SizedBox(width: 20),
+                                DashboardCardWidget(
+                                  title: "Active Students",
+                                  number:
+                                      "${students.where((e) => e.status == "Active").length}",
+                                ),
+                                SizedBox(width: 20),
+                                DashboardCardWidget(
+                                  title: "Paused Accounts",
+                                  number:
+                                      "${students.where((e) => e.status == "Paused").length}",
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 20),
-                            DashboardCardWidget(
-                              title: "Active Students",
-                              number:
-                                  "${students.where((e) => e.status == "Active").length}",
-                            ),
-                            SizedBox(width: 20),
-                            DashboardCardWidget(
-                              title: "Paused Accounts",
-                              number:
-                                  "${students.where((e) => e.status == "Paused").length}",
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                DashboardCardWidget(
+                                  title: "Total income",
+                                  number: "$totalIncome",
+                                ),
+                                SizedBox(width: 20),
+                                DashboardCardWidget(
+                                  title: "Total income",
+                                  number: "$totalIncome",
+                                ),
+                              ],
                             ),
                           ],
                         ),

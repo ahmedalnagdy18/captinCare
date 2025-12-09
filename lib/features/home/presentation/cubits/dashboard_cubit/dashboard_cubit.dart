@@ -4,7 +4,7 @@ import 'package:captin_care/features/home/domain/usecases/add_student_usecase.da
 import 'package:captin_care/features/home/domain/usecases/delete_student_usecase.dart';
 import 'package:captin_care/features/home/domain/usecases/get_students_usecase.dart';
 import 'package:captin_care/features/home/domain/usecases/update_student_usecase.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 
 part 'dashboard_state.dart';
 
